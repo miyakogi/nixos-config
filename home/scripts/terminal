@@ -1,0 +1,122 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+: << COMMENTOUT
+Run default terminal.
+
+Available options:
+  - alacritty
+  - foot
+  - ghostty
+  - kitty
+  - rio
+  - wezterm
+COMMENTOUT
+
+# Load Environment Variables from SystemD (skip if unavailable)
+if command -v systemctl >/dev/null 2>&1; then
+  eval "$(systemctl --user show-environment 2>/dev/null || true)"
+fi
+
+# Set fallback terminals
+case "$XDG_CURRENT_DESKTOP" in
+  Hyprland)
+    # Hyprland default terminal
+    _term_fallback=kitty
+    ;;
+  niri)
+    # Niri default terminal
+    _term_fallback=foot
+    ;;
+  sway*)
+    # Sway default terminal
+    _term_fallback=alacritty
+    ;;
+  *)
+    _term_fallback=alacritty
+    ;;
+esac
+
+# Set terminal from env var
+_term=${TERMINAL:-$_term_fallback}
+
+cmd=("$_term")
+
+# Set initial command options if needed
+case "$_term" in
+  ghostty)
+    # disable +new-window if --class is specified (currently not supported)
+    if [ "${1:-}" != "--class" ]; then
+      cmd+=(+new-window)
+    fi
+    ;;
+  wezterm)
+    cmd+=(start --always-new-process)
+    ;;
+  *)
+    ;;
+esac
+
+# Set class/app-id
+if [ "${1:-}" = "--class" ]; then
+  : "${2:?--class requires an argument}"
+  case "$_term" in
+    alacritty)
+      cmd+=(--class "$2")
+      ;;
+    foot)
+      cmd+=(--app-id "$2")
+      ;;
+    ghostty)
+      cmd+=("--class=com.ghostty.$2")
+      ;;
+    kitty)
+      cmd+=(--app-id "$2")
+      ;;
+    rio)
+      cmd+=(--app-id "$2")
+      ;;
+    wezterm)
+      cmd+=(--class "$2")
+      ;;
+    *)
+      cmd+=(--class "$2")
+      ;;
+  esac
+  shift 2
+fi
+
+# Set command
+if [ "${1:-}" = "-e" ]; then
+  case "$_term" in
+    alacritty)
+      # must
+      ;;
+    foot)
+      # optional
+      shift
+      ;;
+    ghostty)
+      # must
+      ;;
+    kitty)
+      # optional
+      shift
+      ;;
+    rio)
+      # must
+      ;;
+    wezterm)
+      # optional
+      shift
+      ;;
+    *)
+      # do nothing
+      ;;
+  esac
+fi
+
+# Test
+# notify-send "Terminal Test" "${cmd[*]} $*"
+
+exec "${cmd[@]}" "$@"

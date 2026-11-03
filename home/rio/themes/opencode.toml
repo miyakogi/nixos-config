@@ -1,0 +1,23 @@
+[colors]
+background = '#0a0a0a'
+foreground = '#eeeeee'
+selection-background = '#505050'
+cursor = '#fab283'
+
+black = '#0a0a0a'
+red = '#e06c75'
+green = '#7fd88f'
+yellow = '#f5a742'
+blue = '#5c9cf5'
+magenta = '#9d7cd8'
+cyan = '#56b6c2'
+white = '#eeeeee'
+
+light-black = '#808080'
+light-red = '#e06c75'
+light-green = '#7fd88f'
+light-yellow = '#f5a742'
+light-blue = '#5c9cf5'
+light-magenta = '#9d7cd8'
+light-cyan = '#56b6c2'
+light-white = '#ffffff'

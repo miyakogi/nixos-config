@@ -1,0 +1,7 @@
+{
+  "workspace": {
+    "library": [
+      "~/.local/state/nix/profiles/home-manager/home-path/share/hypr/stubs"
+    ]
+  }
+}

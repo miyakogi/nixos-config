@@ -1,0 +1,64 @@
+[language-server]
+pyright = { command = "pyright-langserver", args = [ "--stdio" ] }
+ruff = { command = "ruff", args = [ "server" ] }
+typos = { command = "typos-lsp" }
+rust-analyzer.config = { check.command = "clippy" }
+fish-lsp = { command = "fish-lsp", args = ["start"], environment = { "fish_lsp_show_client_popups" = "false" } }
+
+[[language]]
+name = "rust"
+language-servers = [ "rust-analyzer", "typos" ]
+
+[[language]]
+name = "python"
+scope = "source.python"
+injection-regex = "python"
+roots = [ "pyproject.toml", "setup.py", "poetry.lock", "pyrightconfig.json" ]
+comment-token = "#"
+# install `pyright` and `ruff`
+language-servers = [ "pyright", "ruff", "typos" ]
+indent = { tab-width = 4, unit = "    " }
+
+[[language]]
+name = "ini"
+file-types = [
+  "desktop",
+  "conf",
+
+  # from default setting
+  "ini",
+  # Systemd unit files
+  "automount",
+  "device",
+  "mount",
+  "path",
+  "service",
+  "slice",
+  "socket",
+  "swap",
+  "target",
+  "timer",
+  # Podman quadlets
+  "container",
+  "volume",
+  "kube",
+  "network",
+]
+indent = { tab-width = 4, unit = "    " }
+language-servers = [ "typos" ]
+
+[[language]]
+name = "html"
+auto-format = false
+
+[[language]]
+name = "css"
+auto-format = false
+
+[[language]]
+name = "fish"
+language-servers = [ "fish-lsp" ]
+
+[[language]]
+name = "git-commit"
+language-servers = [ "typos" ]

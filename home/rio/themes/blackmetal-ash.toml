@@ -1,0 +1,31 @@
+# vim:ft=toml
+
+## name: Blackmetal-ash
+## A desaturated, low-contrast terminal theme.
+## Based on kitty/blackmetal-ash.conf with foreground set to ash gray (#c1c1c1)
+## for reduced eye strain while keeping the black metal aesthetic.
+
+[colors]
+background = '#000000'
+foreground = '#c1c1c1'
+selection-background = '#535353'
+selection-foreground = '#c1c1c1'
+cursor = '#c1c1c1'
+
+black = '#000000'
+red = '#5f8787'
+green = '#a06666'
+yellow = '#dd9999'
+blue = '#999999'
+magenta = '#aaaaaa'
+cyan = '#888888'
+white = '#c1c1c1'
+
+light-black = '#535353'
+light-red = '#5f8787'
+light-green = '#a06666'
+light-yellow = '#dd9999'
+light-blue = '#999999'
+light-magenta = '#aaaaaa'
+light-cyan = '#888888'
+light-white = '#ffffff'

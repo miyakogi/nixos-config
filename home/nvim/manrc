@@ -1,0 +1,61 @@
+" vim: set ft=vim:
+
+set encoding=utf-8
+scriptencoding utf-8
+
+" === Search settings ===
+set ignorecase
+set smartcase
+set incsearch
+set hlsearch
+set history=10000
+set nowrapscan
+
+" === Keybindings ===
+" Move to wrap end/start of lines by h,l
+nnoremap h <Left>
+nnoremap l <Right>
+xnoremap h <Left>
+xnoremap l <Right>
+
+" Down and Up with display-lines
+nnoremap <silent> j gj
+nnoremap <silent> k gk
+xnoremap <silent> j gj
+xnoremap <silent> k gk
+nnoremap <silent> gj j
+nnoremap <silent> gk k
+xnoremap <silent> gj j
+xnoremap <silent> gk k
+
+" Move to start/end of lines
+noremap H ^
+noremap L $
+
+" Move to bottom
+noremap ge G
+
+" copy char till end of the line
+xnoremap <C-c> "+y
+
+" === Misc ===
+set laststatus=0
+
+
+" forcibly disable cursorline
+autocmd CursorMoved * set nocursorline
+
+" plugin settings
+function! s:plugin_setting() abort
+  " currently empty
+endfunction
+autocmd VimEnter * call s:plugin_setting()
+
+" set colorscheme
+autocmd VimEnter * colorscheme habamax
+autocmd VimEnter * highlight Search ctermbg=3 ctermfg=0
+autocmd VimEnter * highlight Normal ctermbg=none guibg=none
+autocmd VimEnter * highlight LineNr ctermbg=none guibg=none
+autocmd VimEnter * highlight SignColumn ctermbg=none guibg=none
+autocmd VimEnter * highlight VertSplit ctermbg=none guibg=none
+autocmd VimEnter * highlight NonText ctermbg=none guibg=none

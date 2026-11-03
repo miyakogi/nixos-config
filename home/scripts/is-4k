@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# Report with exit status whether the focused monitor is DP-1 (the 4K display).
+
+command -v jq >/dev/null || exit 1
+
+case "$XDG_CURRENT_DESKTOP" in
+  sway*)
+    name=$(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name')
+    ;;
+  Hyprland)
+    name=$(hyprctl -j monitors | jq -r '.[] | select(.focused) | .name')
+    ;;
+  niri)
+    name=$(niri msg --json focused-output | jq -r '.name')
+    ;;
+  *)
+    exit 1
+    ;;
+esac
+
+[ "$name" = "DP-1" ]

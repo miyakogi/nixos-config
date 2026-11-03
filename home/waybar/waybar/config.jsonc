@@ -1,0 +1,169 @@
+[
+{
+  "layer": "top",
+  "output": ["DP-1"],
+  "name": "main",
+  "spacing": 16,
+  "height": 32,
+  "modules-left": [
+    "custom/os",
+    "hyprland/workspaces",
+    "niri/workspaces",
+  ],
+  "modules-center": [
+    "mpris",
+  ],
+  "modules-right": [
+    "inhibitor",
+    "wireplumber#source",
+    "custom/swaync",
+    "systemd-failed-units",
+    "tray",
+    "clock",
+  ],
+  "custom/os": {
+    "exec": "echo \" NixOS\"",
+    "format": "{}",
+  },
+  "hyprland/workspaces": {
+    "on-click": "activate",
+    "format": "",
+    "persistent-workspaces": {
+      "DP-1": 10,
+    },
+  },
+  "niri/workspaces": {
+    "format": "",
+    "ignore-workspaces": [
+      "memo",
+      "ai",
+    ],
+  },
+  "mpris": {
+    "format": "{player_icon} {dynamic}",
+    "interval": 1,
+    "album-len": 0,
+    "dynamic-len": 80,
+    "player-icons": {
+      "default": "󰫔",
+      "spotify": "󰓇",
+      "spotify-player": "󰓇",
+      "mpd": "󰫔",
+      "firefox": "",
+    },
+    "ignored-players": [
+      "firefox",
+      "chromium",
+    ],
+  },
+  "inhibitor": {
+    "what": "idle",
+    "format": "{icon}",
+    "format-icons": {
+      "activated": "",
+      "deactivated": "",
+    },
+  },
+  "wireplumber#source": {
+    "node-type": "Audio/Source",
+    "only-physical": true,
+    "format": " {volume}%",
+    "format-muted": " ",
+    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
+    "scroll-step": 10,
+  },
+  "custom/swaync": {
+    "tooltip": true,
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "󱅫",
+      "none": "󰂜",
+      "dnd-notification": "󰂠",
+      "dnd-none": "󰪓",
+      "inhibited-notification": "󰂛",
+      "inhibited-none": "󰪑",
+      "dnd-inhibited-notification": "󰂛",
+      "dnd-inhibited-none": "󰪑"
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true,
+  },
+  "systemd-failed-units": {
+    "hide-on-ok": false,
+    "format": " {nr_failed}",
+    "format-ok": "󰸞",
+  },
+  "tray": {
+    "icon-size": 26,
+    "spacing": 8,
+  },
+  "clock": {
+    "format": "  {:%a %d %b %Y 󰅐 %H:%M:%S}",
+    "tooltip": false,
+    "interval": 1,
+  },
+}, {
+  "layer": "top",
+  "output": ["HDMI-A-2"],
+  "name": "sub",
+  "position": "bottom",
+  "spacing": 4,
+  "height": 30,
+  "modules-left": [
+    "hyprland/workspaces",
+    "niri/workspaces",
+  ],
+  "modules-center": [],
+  "modules-right": [
+    "cpu",
+    "memory",
+    "custom/gpu",
+    "custom/temperature",
+    "tray",
+    "clock",
+  ],
+  "hyprland/workspaces": {
+    "on-click": "activate",
+    "format": "",
+    "persistent-workspaces": {
+      "HDMI-A-2": 10,
+    },
+  },
+  "niri/workspaces": {
+    "format": "",
+  },
+  "cpu": {
+    "interval": 1,
+    "format": "{icon0}{icon1}{icon2}{icon3}{icon4}{icon5}{icon6}{icon7}{icon8}{icon9}{icon10}{icon11}{icon12}{icon13}{icon14}{icon15}{icon16}{icon17}{icon18}{icon19} {usage:2}%",
+    "format-icons": ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"],
+  },
+  "memory": {
+    "interval": 1,
+    "format": " {used:2.1f}G/{total:2.1f}G ({percentage:2}%)",
+  },
+  "custom/gpu": {
+    "exec": "printf \"󰍹 %4dMHz (%2d%%)\" $(cat /sys/class/drm/card*/device/pp_dpm_sclk | rg '\\*' | head -n1 | cut -d' ' -f2 | tr -d '[:alpha:]') $(cat /sys/class/drm/card*/device/gpu_busy_percent)",
+    "interval": 1,
+    "format": "{}",
+  },
+  "custom/temperature": {
+    "return-type": "json",
+    "exec": "$HOME/bin/temperature all",
+    "interval": 1,
+    "format": "{}",
+  },
+  "tray": {
+    "icon-size": 24,
+    "spacing": 6,
+  },
+  "clock": {
+    "format": "  {:%a %d %b %Y 󰅐 %H:%M:%S}",
+    "tooltip": false,
+    "interval": 1,
+  },
+}
+]

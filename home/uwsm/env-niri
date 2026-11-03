@@ -1,0 +1,1 @@
+export RIO_CONFIG_HOME="$HOME/.config/rio-niri/"

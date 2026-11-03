@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+exec "$(dirname "$(readlink -f "$0")")/tw-notify-shared" due.after:now-10min due.by:now

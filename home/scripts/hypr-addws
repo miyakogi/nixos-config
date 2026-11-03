@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+command -v jq >/dev/null || { echo "jq not found" >&2; exit 1; }
+
+start=1
+is-4k || start=11
+
+next=$(hyprctl -j workspaces | jq -r --argjson start "$start" '
+  [.[].id] as $ids
+  | first(range($start; $start + 10) as $n | $n | select(($ids | index($n)) == null))
+')
+
+if [ "$next" != "" ] && [ "$next" != "null" ]; then
+  hyprctl dispatch "hl.dsp.focus({workspace=$next})"
+else
+  notify-send -u normal "hypr-addws" "Workspaces $start-$((start + 9)) are all in use"
+fi

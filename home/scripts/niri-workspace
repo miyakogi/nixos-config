@@ -1,0 +1,156 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+command -v jq >/dev/null || { echo "jq not found" >&2; exit 1; }
+
+usage() {
+  echo "usage: niri-workspace {focus|move {next|prev|last|first|<n>}|toggle <name>}" >&2
+}
+
+action="${1:-}"
+
+case "$action" in
+  focus|move)
+    if [[ ! "${2:-}" =~ ^([0-9]{1,18}|next|prev|last|first)$ ]]; then
+      usage
+      exit 1
+    fi
+    ;;
+  toggle)
+    if [[ -n "${2:-}" && ! "${2:-}" =~ ^[a-zA-Z0-9_-]+$ ]]; then
+      echo "invalid workspace name: ${2:-}" >&2
+      exit 1
+    fi
+    ;;
+  *)
+    usage
+    exit 1
+    ;;
+esac
+
+workspaces=$(niri msg --json workspaces)
+
+# Derive the output from the focused workspace to save an IPC round trip; fall
+# back to focused-output in case no workspace is focused.
+output=$(jq -r '[ .[] | select(.is_focused == true) | .output ] | first // empty' <<< "$workspaces")
+if [[ -z "$output" ]]; then
+  output=$(niri msg --json focused-output | jq -r '.name')
+fi
+
+eligible_idx() {
+  jq -c --arg output "$output" --argjson names "$names_json" '
+    [ .[] | select(.output == $output)
+    | select((.name // "") as $n | $names | index($n) | not)
+    | .idx ]
+    | sort
+  ' <<< "$workspaces"
+}
+
+focused_idx() {
+  jq -r '.[] | select(.is_focused == true) | .idx' <<< "$workspaces"
+}
+
+# Pick a workspace index from the eligible list. Directions:
+#   next|prev  cycle relative to the current index (possibly empty), wrapping around
+#   first|last lowest/highest eligible index
+pick_index() {
+  local direction="$1" current="${2:-}"
+  jq -r --arg dir "$direction" --arg cur "$current" '
+    ($cur | if . == "" then null else tonumber end) as $c
+    | if $dir == "first" then min
+      elif $dir == "last" then max
+      elif $c == null then (if $dir == "next" then min else max end)
+      elif $dir == "next" then ([ .[] | select(. > $c) ] | min) // min
+      else ([ .[] | select(. < $c) ] | max) // max
+      end
+    | . // empty
+  ' <<< "$eligible"
+}
+
+workspace_action() {
+  local mode="$1" direction="$2" target names_json eligible
+  # Workspace names to exclude from focus/move, comma-separated in NIRI_SCRATCHPAD_NAMES.
+  names_json=$(jq -Rn --arg e "${NIRI_SCRATCHPAD_NAMES:-}" \
+    '$e | split(",") | map(gsub("^\\s+|\\s+$"; "")) | map(select(length > 0))')
+  # Eligible workspace indices on the focused output are constant per invocation.
+  eligible=$(eligible_idx)
+
+  case "$direction" in
+    next|prev)  target=$(pick_index "$direction" "$(focused_idx)") ;;
+    first|last) target=$(pick_index "$direction") ;;
+    *)          # numeric N (1-based; 0 = no-op; N > count = clamp to last)
+      if (( 10#$direction == 0 )); then
+        return 0
+      fi
+      target=$(jq -r --argjson n "$((10#$direction - 1))" '
+        if $n >= length then .[-1] // empty else .[$n] // empty end
+      ' <<< "$eligible")
+      ;;
+  esac
+  if [[ -n "$target" ]]; then
+    if [[ "$mode" == "focus" ]]; then
+      niri msg action focus-workspace "$target"
+    else
+      niri msg action move-window-to-workspace "$target"
+    fi
+  fi
+}
+
+restore_scratchpad() {
+  local state_file="$1" prev_output entry output_name idx
+  prev_output=$(jq -r '.output' "$state_file")
+  mapfile -t entries < <(jq -c '.workspaces[]' "$state_file")
+  for entry in "${entries[@]}"; do
+    output_name=$(jq -r '.output' <<< "$entry")
+    idx=$(jq -r '.idx' <<< "$entry")
+    if jq -e --arg o "$output_name" --argjson i "$idx" '
+      any(.[]; .output == $o and .is_active == true and .idx != $i)
+      and any(.[]; .output == $o and .idx == $i)
+    ' <<< "$workspaces" >/dev/null; then
+      niri msg action focus-monitor "$output_name" || true
+      niri msg action focus-workspace "$idx" || true
+    fi
+  done
+  if [[ -n "$prev_output" ]] && jq -e --arg o "$prev_output" \
+      'any(.[]; .output == $o)' <<< "$workspaces" >/dev/null; then
+    niri msg action focus-monitor "$prev_output" || true
+  fi
+}
+
+toggle_scratchpad() {
+  local name="$1" state_file visible state runtime_dir
+  runtime_dir="${XDG_RUNTIME_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}}/niri-workspace"
+  # shellcheck disable=SC2174  # only the leaf dir needs 700; parents may exist
+  mkdir -p -m 700 "$runtime_dir"
+
+  state_file="${runtime_dir}/niri-${name}.json"
+  visible=$(jq -r --arg name "$name" '
+    any(.[]; .name == $name and .is_active == true)
+  ' <<< "$workspaces")
+  if [[ "$visible" == "true" ]]; then
+    if [[ -s "$state_file" ]]; then
+      restore_scratchpad "$state_file"
+    fi
+    rm -f "$state_file"
+    exit 0
+  fi
+  # Snapshot before focusing, but only persist once the focus succeeds so a
+  # failed focus cannot leave stale state behind.
+  state=$(jq -c --arg output "$output" --arg name "$name" '
+    {
+      output: $output,
+      workspaces: [ .[] | select(.is_active == true)
+      | select((.name // "") != $name)
+      | {output, idx} ]
+    }
+  ' <<< "$workspaces")
+  niri msg action focus-workspace "$name"
+  printf '%s\n' "$state" > "${state_file}.tmp"
+  mv "${state_file}.tmp" "$state_file"
+}
+
+case "$action" in
+  focus|move) workspace_action "$action" "${2:-}" ;;
+  toggle)     toggle_scratchpad "${2:-main}" ;;
+esac

@@ -1,0 +1,243 @@
+@define-color background @base;
+
+* {
+  min-height: 0;
+}
+
+window#waybar {
+  border: none;
+  border-radius: 0rem;
+  margin: 0px;
+  padding: 0rem;
+
+  min-height: 1px;
+  color: @foreground;
+  background-color: @background;
+  font-family: monospace;
+  font-weight: 300;
+}
+
+window#waybar.main {
+  font-size: 13.5pt;
+}
+
+window#waybar.sub {
+  font-size: 12.0pt;
+}
+
+.modules-left,
+.modules-center,
+.modules-right {
+  border-radius: 0rem;
+  margin: 0px 16px 1px;
+}
+
+.modules-center {
+  min-width: 64px;
+}
+
+#custom-os {
+  color: @os;
+  padding: 0rem 0.5rem;
+  border-bottom: solid 2px @os;
+  font-weight: bold;
+}
+
+#workspaces {
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+#workspaces button {
+  background-color: @muted;
+  border-radius: 2rem;
+  padding: 0rem 0.55rem;
+  margin: 0rem 0.35rem;
+  animation: ws_normal 20s ease-in-out 1;
+  transition: all 0.3s;
+}
+
+#workspaces button.persistent {
+  background-color: @subtle;
+}
+
+#workspaces button.empty {
+  background-color: @muted;
+}
+
+#workspaces button.visible {
+  background-color: @subtle;
+  padding: 0rem 1.00rem;
+}
+
+#workspaces button.active {
+  background-color: @cyan;
+  padding: 0rem 1.00rem;
+  animation: ws_active 20s ease-in-out 1;
+}
+
+window#waybar.sub #workspaces button {
+  padding: 0rem 0.45rem;
+}
+
+window#waybar.sub #workspaces button.visible {
+  padding: 0rem 1.0rem;
+}
+
+window#waybar.sub #workspaces button.active {
+  padding: 0rem 1.0rem;
+}
+
+#mpris {
+  min-height: 0px;
+  padding: 0rem 1rem;
+  margin: 0px;
+  font-weight: 400;
+}
+
+#mpris.playing {
+  color: @white;
+  padding: 0rem 1rem;
+  box-shadow: inset 0px -4px @white;
+}
+
+#mpris.paused {
+  color: @comment;
+  padding: 0rem 1rem;
+  box-shadow: inset 0px -4px @comment;
+}
+
+#mpris.stopped {
+  padding: 0px 20px;
+}
+
+window#waybar.main #inhibitor {
+  color: @background;
+  font-family: "Symbols Nerd Font";
+  border-radius: 1rem;
+  margin: 0rem 0.1rem;
+  padding: 0rem 1rem;
+  transition: all 0.3s;
+}
+
+window#waybar.main #inhibitor.deactivated {
+  background-color: @muted;
+}
+
+window#waybar.main #inhibitor.activated {
+  background-color: @red;
+  padding: 0rem 1.5rem;
+}
+
+window#waybar.main #wireplumber {
+  color: @background;
+  background-color: @red;
+  font-family: "Symbols Nerd Font", monospace;
+  font-weight: bold;
+  border-radius: 1rem;
+  margin: 0rem 0.1rem;
+  padding: 0rem 1.8rem;
+  transition: all 0.3s;
+}
+
+window#waybar.main #wireplumber.source-muted {
+  background-color: @muted;
+  padding: 0rem 1.2rem;
+}
+
+#custom-swaync {
+  color: @background;
+  background-color: @foreground;
+  padding: 0rem 1.5rem;
+  border-radius: 1rem;
+  transition: all 0.3s;
+}
+
+#custom-swaync.notification {
+  background-color: @yellow;
+}
+
+#systemd-failed-units {
+  color: @background;
+  font-family: "Symbols Nerd Font";
+  border-radius: 1rem;
+  padding: 0rem 1.4rem;
+  transition: all 0.3s;
+}
+
+#systemd-failed-units.ok {
+  background-color: @green;
+}
+
+#systemd-failed-units.degraded {
+  background-color: @red;
+  font-weight: bold;
+}
+
+#cpu {
+  color: @cyan;
+  border-radius: 0rem;
+  border-bottom: solid 4px @cyan;
+  margin: 0rem 0.1rem;
+  background-color: @background;
+  padding: 0rem 1.4rem;
+}
+
+#memory {
+  color: @green;
+  border-radius: 0rem;
+  border-bottom: solid 4px @green;
+  margin: 0rem 0.1rem;
+  background-color: @background;
+  padding: 0rem 1.4rem;
+}
+
+#custom-gpu {
+  color: @yellow;
+  border-radius: 0rem;
+  border-bottom: solid 4px @yellow;
+  margin: 0rem 0.1rem;
+  background-color: @background;
+  padding: 0rem 1.4rem;
+}
+
+#custom-temperature {
+  color: @blue;
+  border-radius: 0rem;
+  border-bottom: solid 4px @blue;
+  margin: 0rem 0.1rem;
+  background-color: @background;
+  padding: 0rem 1.4rem;
+}
+
+#custom-temperature.Warning {
+  color: @red;
+  border-bottom: solid 4px @red;
+  font-weight: bold;
+}
+
+#custom-temperature.Critical {
+  color: @background;
+  background-color: @red;
+  border-bottom: solid 4px @red;
+  font-weight: bold;
+}
+
+#tray {
+  background-color: @background;
+  color: #ffffff;
+  border-radius: 0rem;
+  border-bottom: solid 1px @foreground;
+  margin: 0rem 0.1rem;
+  padding: 0rem 1.4rem;
+}
+
+#clock {
+  background-color: @background;
+  color: @foreground;
+  border-radius: 0rem;
+  border-bottom: solid 4px @subtle;
+  margin: 0rem 0.1rem;
+  padding: 0rem 1.4rem;
+}

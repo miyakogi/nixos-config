@@ -1,0 +1,127 @@
+// Modified from: 24.jsonc
+{
+    "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+    "logo": {
+      "type": "none",
+      "padding": {
+        "top": 2
+      }
+    },
+    "display": {
+      "separator": "",
+      "constants": [
+        // CONSTANT {$1} - VERTICAL BARS AT START AND 75th CHARACTERS FORWARD AND BACKWARD
+        "\u001b[90m│                                            │\u001b[44D\u001b[39m"
+      ]
+    },
+    "modules": [
+      // CUSTOM - Top UI bar
+      {
+        "type": "custom",
+        "key": "{#90}╭ Keys ───────╮",
+        "format": "{#90}╭ Values ────────────────────────────────────╮",
+      },
+      {
+        "type": "title",
+        "key": "{#90}│ {#92}User        {#90}│",
+        "format": "{$1}{user-name} {#2}@{host-name}"
+      },
+      {
+        "type": "datetime",
+        "key": "{#90}│ {#92}Datetime    {#90}│",
+        "format": "{$1}{year}-{month-pretty}-{day-in-month} {hour-pretty}:{minute-pretty}:{second-pretty} {#2}{weekday}"
+      },
+      {
+        "type": "os",
+        "key": "{#90}│ {#93}OS          {#90}│",
+        "format": "{$1}{?pretty-name}{pretty-name}{?}{/pretty-name}{name}{/} {codename}"
+      },
+      {
+        "type": "kernel",
+        "key": "{#90}│ {#93}Kernel      {#90}│",
+        "format": "{$1}{sysname} {#2}{release}"
+      },
+      // {
+      //   "type": "packages",
+      //   "key": "{#90}│ {#93}Packages    {#90}│",
+      //   "format": "{$1}nix: {nix-all}, flatpak: {flatpak-all}"
+      // },
+      {
+        "type": "uptime",
+        "key": "{#90}│ {#93}Uptime      {#90}│",
+        "format": "{$1}{?days}{days} Days + {?}{hours}h {minutes}m {seconds}s"
+      },
+      {
+        "type": "cpu",
+        "key": "{#90}│ {#91}CPU         {#90}│",
+        "showPeCoreCount": true,
+        "temp": true,
+        "format": "{$1}{name}"
+      },
+      {
+        "type": "gpu",
+        "key": "{#90}│ {#91}GPU         {#90}│",
+        "detectionMethod": "auto",
+        "driverSpecific": true,
+        "format": "{$1}{name}"
+      },
+      {
+        "type": "memory",
+        "key": "{#90}│ {#91}Memory      {#90}│",
+        "format": "{$1}{used} / {total} ({percentage})"
+      },
+      {
+        "type": "disk",
+        "key": "{#90}│ {#91}Disk        {#90}│",
+        "format": "{$1}{size-used} / {size-total} ({size-percentage})"
+      },
+      {
+        "type": "terminal",
+        "key": "{#90}│ {#95}Terminal    {#90}│",
+        "format": "{$1}{pretty-name} {#2}{version}"
+      },
+      // {
+      //   "type": "terminalfont",
+      //   "key": "{#90}│ {#95}Font        {#90}│",
+      //   "format": "{$1}{name} {#2}{size}pt"
+      // },
+      {
+        "type": "shell",
+        "key": "{#90}│ {#95}Shell       {#90}│",
+        "format": "{$1}{pretty-name} {#2}v{version}"
+      },
+      {
+        "type": "player",
+        "key": "{#90}│ {#94}Player      {#90}│",
+        "format": "{$1}{name}"
+      },
+      {
+        "type": "media",
+        "key": "{#90}│ {#94}Song        {#90}│",
+        "format": "{$1}{title} - {artist}"
+      },
+      // CUSTOM - Button UI bar
+      {
+        "type": "custom",
+        "key": "{#90}╰─────────────╯",
+        "format": "{#90}╰────────────────────────────────────────────╯",
+      },
+      {
+        "type": "custom",
+        "key": " ",
+        "format": "{#90}╭ Colors ───────────────────────────────────────────────────╮",
+      },
+      {
+        "type": "custom",
+        "format": "{#90}│ {#40}    {#41}    {#42}    {#43}    {#44}    {#45}    {#46}    {#47}    {#}                          {#90}│",
+      },
+      {
+        "type": "custom",
+        "format": "{#90}│ {#100}    {#101}    {#102}    {#103}    {#104}    {#105}    {#106}    {#107}    {#}                          {#90}│",
+      },
+      {
+        "type": "custom",
+        "format": "{#90}╰───────────────────────────────────────────────────────────╯",
+      },
+    ]
+  }

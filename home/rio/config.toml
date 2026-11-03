@@ -1,0 +1,113 @@
+# Theme
+theme = "wm-theme"
+
+# Use fork
+#
+# Defaults for POSIX-based systems (Windows is not configurable):
+# MacOS: spawn processes
+# Linux/BSD: fork processes
+use-fork = true
+
+confirm-before-quit = false
+
+# Inner margin (CSS order: top, right, bottom, left)
+margin = [0, 8, 4, 8]
+
+# Environment variables
+env-vars = []
+
+[editor]
+program = "nvim"
+args = []
+
+# Cursor
+[effects]
+custom-mouse-cursor = false
+trail-cursor = false
+
+[cursor]
+shape = 'beam'
+blinking = true
+blinking-interval = 500
+ignore-selection-foreground-color = false
+
+# Window configuration
+[window]
+mode = "Maximized"
+opacity = 0.92
+decorations = "Disabled"
+
+# Renderer
+[renderer]
+backend = "Vulkan"
+# max-fps = 120
+strategy = "Events"
+
+# Fonts
+[fonts]
+size = 21
+family = "Lilex"
+# features = ["ss01", "ss02", "ss03", "ss04", "ss05", "ss06", "ss07", "ss08", "ss09", "calt", "liga"]
+features = ["cv08", "cv15"]
+# features = []
+hinting = false
+use-drawable-chars = true
+
+[fonts.regular]
+# family = "cascadiamono"
+# style = "normal"
+weight = 300
+#
+[fonts.bold]
+# family = "cascadiamono"
+# style = "normal"
+weight = 500
+#
+[fonts.italic]
+# family = "cascadiamono"
+# style = "italic"
+weight = 300
+#
+[fonts.bold-italic]
+# family = "cascadiamono"
+# style = "italic"
+weight = 500
+
+[hints]
+# Characters used for hint labels (should be easy to type)
+alphabet = "jfkdls;ahgurieowpq"
+
+# URL hint example
+[[hints.rules]]
+regex = "(https://|http://)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^\u27E8\u27E9`\\\\]+"  # \u27E8 and \u27E9 stand for '()'
+hyperlinks = true
+post-processing = true
+persist = false
+
+[hints.rules.action]
+action = "Copy"
+
+[hints.rules.mouse]
+enabled = true
+mods = []
+
+# Scroll
+[scroll]
+multiplier = 5.0
+divider = 1.0
+
+# Navigation
+[navigation]
+mode = "Plain"  # disable tab
+use-split = false
+
+# Shell
+[shell]
+program = "fish"
+
+# Bindings
+[bindings]
+keys = [
+  # Ctrl+Backspace -> Ctrl+W
+  { key = 'back', with = 'control', esc = "\u0017" },
+]

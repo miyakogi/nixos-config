@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Output valid JSON (or an empty object when sensors is unavailable).
+sensors_json() {
+  sensors -j 2>/dev/null || echo '{}'
+}
+
+cpu_temp() {
+  sensors_json |
+    jq '.["coretemp-isa-0000"] | .["Package id 0"] | .["temp1_input"] // 0 | floor' ||
+    echo 0
+}
+
+# NOTE: the sensor chip id below is specific to this machine's AMD GPU.
+gpu_temp() {
+  sensors_json |
+    jq '.["amdgpu-pci-0300"] | [ .edge.temp1_input, .junction.temp2_input, .mem.temp3_input ] | map(select(. != null)) | max // 0 | floor' ||
+    echo 0
+}
+
+class_of() {
+  if [ "$1" -lt 65 ]; then
+    class="Idle"
+    icon=""  # low
+  elif [ "$1" -lt 80 ]; then
+    class="Warning"
+    icon=""  # default
+  else
+    class="Critical"
+    icon=""  # high
+  fi
+}
+
+emit() {
+  local temp="$1" key="${2:-}"
+  if [ "$key" != "" ]; then
+    jq -cn --arg text "${icon}  ${temp}°C" --arg key "$key" --arg class "$class" \
+      '{ text: $text } + { ($key): $class }'
+  else
+    jq -cn --arg text "${icon}  ${temp}°C" '{ text: $text }'
+  fi
+}
+
+case "${1:-}" in
+  all)
+    ctemp=$(cpu_temp)
+    gtemp=$(gpu_temp)
+    class_of "$((ctemp > gtemp ? ctemp : gtemp))"
+    jq -cn --arg text "${icon} CPU ${ctemp}°C | GPU ${gtemp}°C" --arg class "$class" \
+      '{ text: $text, class: $class }'
+    ;;
+  cpu)
+    temp=$(cpu_temp)
+    class_of "$temp"
+    emit "$temp" "${2:-}"
+    ;;
+  gpu)
+    temp=$(gpu_temp)
+    class_of "$temp"
+    emit "$temp" "${2:-}"
+    ;;
+  *)
+    class_of 0
+    emit 0 "${2:-}"
+    ;;
+esac

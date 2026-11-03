@@ -1,0 +1,180 @@
+# Starship Config File
+
+format = """
+$username\
+$hostname\
+${env_var.ZMX_SESSION}\
+${custom.distrobox}\
+$shlvl\
+$directory\
+$sudo\
+${custom.giturl}\
+$git_branch\
+$git_commit\
+$git_state\
+$git_metrics\
+$git_status\
+$direnv\
+$docker_context\
+$c\
+$dart\
+$elixir\
+$erlang\
+$golang\
+$nodejs\
+$deno\
+$bun\
+$python\
+$ruby\
+$rust\
+$zig\
+$buf\
+$nix_shell\
+$memory_usage\
+$env_var\
+$cmd_duration\
+$line_break\
+$jobs\
+$shell\
+$status\
+$character\
+"""
+
+right_format = """
+$time\
+"""
+
+follow_symlinks = false
+
+[time]
+time_format = "󰅐 %T  %a %d %b %Y"
+disabled = false
+style = "bold blue"
+format = "[$time]($style)"
+
+[hostname]
+ssh_symbol = "󰬏 "
+style = "bold cyan"
+format = "[$ssh_symbol$hostname]($style) "
+
+[env_var.ZMX_SESSION]
+symbol = "󱇯 "
+format = "[$symbol$env_value]($style) "
+description = "zmx session name"
+style = "bold white"
+
+[shell]
+disabled = false
+format = '$indicator'
+bash_indicator = '[](dimmed white)'
+zsh_indicator = '[](dimmed white)'
+fish_indicator = '[](dimmed white) '
+powershell_indicator = '[PowerShell](yellow)'
+elvish_indicator = '[Elvish](cyan)'
+
+[nix_shell]
+symbol = '󱄅 '
+
+[memory_usage]
+disabled = false
+threshold = 70
+format = "[${ram}( | ${swap})]($style) "
+style = "bold yellow"
+
+[cmd_duration]
+format = "[ \\($duration\\)](fg:white bold)"
+
+[directory]
+truncation_length = 5
+truncate_to_repo = false
+truncation_symbol = ".../"
+repo_root_style = "bold purple"
+read_only = "󰻌"
+style = "bold blue"
+
+[sudo]
+format = "[$symbol ]($style)"
+symbol = "󰕥"
+style = "bold yellow"
+
+[custom.giturl]
+description = "Display symbol for remote Git server"
+shell = ["bash", "--noprofile", "--norc"]
+command = """
+GIT_REMOTE=$(command git ls-remote --get-url 2>/dev/null)
+if [[ "$GIT_REMOTE" =~ "github" ]]; then
+    GIT_REMOTE_SYMBOL=""
+elif [[ "$GIT_REMOTE" =~ "gitlab" ]]; then
+    GIT_REMOTE_SYMBOL=""
+elif [[ "$GIT_REMOTE" =~ "bitbucket" ]]; then
+    GIT_REMOTE_SYMBOL=""
+elif [[ "$GIT_REMOTE" =~ "git" ]]; then
+    GIT_REMOTE_SYMBOL=""
+else
+    GIT_REMOTE_SYMBOL=""
+fi
+echo "$GIT_REMOTE_SYMBOL"
+"""
+when = 'git rev-parse --is-inside-work-tree 2>/dev/null'
+format = "[\\($output](purple) "
+
+[git_branch]
+style = "fg:purple"
+format = "[$branch ]($style)"
+
+[git_status]
+conflicted = "!$count"
+ahead = "↑$count "
+behind = "↓$count "
+diverged = "⌥$count "
+untracked = "?$count "
+stashed = "\\$$count "
+modified = "~$count "
+staged = "+$count "
+renamed = "»$count "
+deleted = "x$count "
+style = "fg:purple bold"
+format = "[$all_status$ahead_behind\\) ]($style)"
+
+[direnv]
+symbol = "󰷌 "
+disabled = false
+
+[jobs]
+# default symbol is not rendered on wezterm
+symbol = " "
+
+[nodejs]
+format = "[$symbol($version )]($style)"
+symbol = " "
+
+[python]
+format = '[${symbol}(${version} )(\(${virtualenv}\) )]($style)'
+symbol = " "
+detect_extensions = []
+
+[ruby]
+format = "[$symbol($version )]($style)"
+symbol = " "
+
+[rust]
+format = "[$symbol($version )]($style)"
+symbol = "󱘗 "
+
+[status]
+disabled = false
+symbol = "!"
+
+[character]
+success_symbol = "[|>](bold green)"
+error_symbol = "[|>](bold red)"
+format = "$symbol "
+
+[custom.distrobox]
+description = "Show hostname in distrobox container"
+shell = [ "bash", "--noprofile", "--norc" ]
+command = """echo "$HOSTNAME" | sed -E 's/^([^.]+).*/\\1/'"""
+when = "test -d /run/host"
+style = "bg:cyan fg:black bold"
+symbol = "󰰘"
+format = '[ [$symbol](bg:cyan black) $output ]($style) '

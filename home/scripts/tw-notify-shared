@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# Shared Taskwarrior due-task notifier.
+# Usage: tw-notify-shared <task filter...>
+
+if [ "$#" -eq 0 ]; then
+  echo "usage: tw-notify-shared <task filter...>" >&2
+  exit 1
+fi
+
+if ! command -v jq >/dev/null 2>&1; then
+  echo "tw-notify-shared: jq not found" >&2
+  exit 1
+fi
+
+due_now=$(task "$@" status:pending count)
+if [[ "$due_now" =~ ^[0-9]+$ ]] && [ "$due_now" -gt 0 ]; then
+  notify-send -u normal -i capacities "Taskwarrior" \
+    "!!!TASK!!! - $(task "$@" status:pending export | jq -r '.[].description')"
+fi

@@ -1,0 +1,26 @@
+--- a/modules/home-manager.nix
++++ b/modules/home-manager.nix
+@@ -104,13 +104,16 @@
+         # ログインシェルがこれを読まない限り GUI アプリに届かない。GDM と Plasma はどちらも ~/.config/environment.d を取り込む。
+         # home.sessionVariables 全体は転記しない (値の型やシェル構文が environment.d で使えない変数が混ざる)。
+         # QT_PLUGIN_PATH (nixpkgs の Qt プラグイン) も転記しない。ディストリの Qt アプリが別バージョンの Qt のプラグインを読みにいく
+-        systemd.user.sessionVariables = lib.getAttrs (lib.filter (n: config.home.sessionVariables ? ${n}) [
+-          "GTK_IM_MODULE"
+-          "QT_IM_MODULE"
+-          "XMODIFIERS"
+-          "SDL_IM_MODULE"
+-          "GLFW_IM_MODULE"
+-        ]) config.home.sessionVariables;
++        # Read the fcitx5 option directly instead of home.sessionVariables:
++        # home.sessionVariables is also written by Home Manager's opencode module when
++        # mutableSettings is enabled, and that definition reads home.file, which in turn
++        # evaluates this option through xdg.configFile and systemd.user.sessionVariables.
++        systemd.user.sessionVariables =
++          im.fcitx5.sessionVariables
++          // lib.optionalAttrs (!im.fcitx5.waylandFrontend) {
++            GTK_IM_MODULE = "fcitx";
++            QT_IM_MODULE = "fcitx";
++          };
+       })
+ 
+       # GNOME Wayland の gnome-shell はアプリの入力を IBus の D-Bus 名 (org.freedesktop.IBus) へ送る。nixpkgs の fcitx5 は

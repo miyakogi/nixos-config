@@ -1,0 +1,74 @@
+theme = "base16_transparent"
+
+[editor]
+gutters = ["diagnostics", "diff"]
+auto-format = false
+true-color = true
+color-modes = true
+idle-timeout = 50
+completion-trigger-len = 0
+rainbow-brackets = true
+
+[editor.soft-wrap]
+enable = true
+wrap-indicator = "󱞩 "
+
+[editor.statusline]
+left = ["mode", "file-name"]
+right = ["separator", "diagnostics", "file-encoding", "file-type", "separator", "position", "position-percentage"]
+separator = ""
+mode.normal = "NORMAL"
+mode.insert = "INSERT"
+mode.select = "VISUAL"
+
+[editor.cursor-shape]
+normal = "block"
+insert = "bar"
+select = "underline"
+
+[editor.search]
+wrap-around = false
+
+[editor.indent-guides]
+render = true
+rainbow = "dim"
+character = "▏"
+
+[editor.whitespace]
+render = { tab = "all" }
+characters = { tabpad = "·" }  # Tabs will look like "→···" (depending on tab width)
+
+[editor.word-completion]
+enable = true
+trigger-length = 2
+
+[keys.normal]
+"[" = { "c" = "goto_prev_change", "e" = "goto_prev_diag" }
+"]" = { "c" = "goto_next_change", "e" = "goto_next_diag" }
+"C-c" = "yank_joined_to_clipboard"
+
+[keys.normal.g]
+"c" = "toggle_comments"
+"u" = "switch_to_lowercase"
+"U" = "switch_to_uppercase"
+"q" = ":reflow"
+
+[keys.insert]
+"C-f" = "move_char_right"
+"C-b" = "move_char_left"
+"C-e" = ["goto_line_end", "move_char_right"]
+"C-a" = "goto_first_nonwhitespace"
+"C-t" = "indent"
+"C-d" = "unindent"
+"C-v" = ":clipboard-paste-before"
+"C-[" = "normal_mode"
+"C-backspace" = "delete_word_backward"
+
+[keys.select]
+"C-c" = "yank_joined_to_clipboard"
+
+[keys.select.g]
+"c" = "toggle_comments"
+"u" = "switch_to_lowercase"
+"U" = "switch_to_uppercase"
+"q" = ":reflow"
