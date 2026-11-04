@@ -286,11 +286,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1793198875,
-        "narHash": "sha256-CZR26099bnlOWgLpMOPwdpmocSAGetbepjkP661qml4=",
+        "lastModified": 1793832056,
+        "narHash": "sha256-ib/5odHnU49LpwDFpu6fNOzgdRcDKw6kcM/jrj1eHyw=",
         "owner": "Alexays",
         "repo": "Waybar",
-        "rev": "f6f73c81818b0a6753c1efb68e0fae2149eac028",
+        "rev": "a5c8616875dc919b30b96415318d1ae6fb4a5b67",
         "type": "github"
       },
       "original": {

@@ -46,12 +46,6 @@
       meltypeModule = import "${meltypeSrc}/modules/home-manager.nix" (
         meltypePkgs: meltypePkgs.extend inputs.nix-meltype.overlays.default
       );
-
-      waybarPackage = inputs.waybar.packages.${system}.default.overrideAttrs (old: {
-        postUnpack =
-          pkgs.lib.replaceStrings [ "subprojects/cava-1.0.0" ] [ "subprojects/libcava" ]
-            old.postUnpack;
-      });
     in
     {
       formatter.x86_64-linux = pkgs.nixfmt;
@@ -69,7 +63,7 @@
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
-                extraSpecialArgs = { inherit inputs waybarPackage; };
+                extraSpecialArgs = { inherit inputs; };
 
                 users.miyaco = {
                   imports = [
