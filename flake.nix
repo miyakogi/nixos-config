@@ -36,8 +36,6 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
-
-        config.problems.handlers."gtk+".broken = "warn";
       };
 
       meltypeSrc = pkgs.applyPatches {

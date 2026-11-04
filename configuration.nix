@@ -495,11 +495,6 @@ in
       "zsh-abbr"
     ];
 
-  # Home Manager's i18n.inputMethod module still adds a GTK2 immodule cache,
-  # and nixpkgs now marks gtk2 broken ahead of its removal in NixOS 27.05.
-  # Keep evaluating until Home Manager drops the cache.
-  nixpkgs.config.problems.handlers."gtk+".broken = "warn";
-
   # Docker
   virtualisation.docker = {
     enable = true;

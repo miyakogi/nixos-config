@@ -20,7 +20,6 @@ NixOS + home-manager flake for the single host `nixos-desktop` (x86_64-linux). N
 - home-manager runs as a NixOS module with `useGlobalPkgs` and `useUserPackages`, so the flake exposes no `homeConfigurations`
 - Unfree packages are allowlisted by name in `configuration.nix` (`nixpkgs.config.allowUnfreePredicate`), not with `allowUnfree = true` — add a name there to install another unfree package. home-manager shares this `pkgs` through `useGlobalPkgs`, so the same list covers `home/`
 - `meltypeSrc` applies `home/patches/nix-meltype-session-vars.patch` to the `nix-meltype` input, and `waybarPackage` rewrites the Waybar input's cava subproject path; keep both when updating those inputs
-- `nixpkgs.config.problems.handlers."gtk+".broken = "warn"` keeps evaluation working while home-manager still emits a GTK2 immodule cache
 
 ## Formatting
 
