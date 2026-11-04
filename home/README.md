@@ -6,11 +6,10 @@ Personal configuration: dual window manager setup (Hyprland + Niri), Japanese IM
 
 ## Overview
 
-- **Dual window managers** — [Hyprland](https://hyprland.org/) (Lua config in `hypr/hyprland.lua`) and [Niri](https://github.com/niri-wm/niri), both launched through [uwsm](https://github.com/Vladimir-csp/uwsm) and sharing the same scripts and services
-- **Japanese input** — fcitx5 with [hazkey](https://github.com/aster-void/nix-hazkey), a neural kana-kanji conversion IME.
-- **WM-agnostic scripts** — `scripts/` is installed verbatim to `~/bin`; window manager keybindings call these by name
-- **Systemd user services** — per-WM Waybar and idle daemons (hypridle/swayidle), ollama, Taskwarrior notification timers
-- **Many terminals configured** — alacritty, foot, kitty, ghostty, rio, wezterm
+- **Dual window managers** — [Hyprland](https://hyprland.org/) (Lua config in `hypr/hyprland.lua`) and [Niri](https://github.com/niri-wm/niri), both launched through [uwsm](https://github.com/Vladimir-csp/uwsm) and sharing the same WM-agnostic scripts and per-WM systemd user units (Waybar, idle daemons)
+- **Japanese input** — fcitx5 with [hazkey](https://github.com/aster-void/nix-hazkey), a neural kana-kanji conversion IME, provisioned via the `nix-hazkey` flake input
+- **WM-agnostic scripts** — `scripts/` is installed verbatim to `~/bin`; the shared `terminal`, `launch-menu`, `screenshot`, and `leave` are called by name from both Hyprland and Niri keybindings, while `hypr-addws`, `hypr-scratchterm`, and `niri-workspace` stay WM-specific
+- **Services and timers** — per-WM Waybar services so one bar can restart without touching the other, idle daemons, ollama, and Taskwarrior notification timers
 
 ## Applying
 
@@ -26,29 +25,11 @@ The flake exposes no `homeConfigurations`, so `home-manager switch --flake .#miy
 
 ## Structure
 
-`home.nix` is the root module, imported by the root `flake.nix` as the `users.miyaco` home-manager module.
-
-```
-home/
-├── home.nix                     # root module (packages, imports)
-├── scripts.nix                  # installs scripts/ to ~/bin
-├── <app>/<app>.nix              # per-app home-manager modules
-├── scripts/                     # WM-agnostic shell scripts
-└── services/services.nix        # systemd user units via systemd.user.*
-```
-
-`home.nix` imports each module; most apps live in `<app>/<app>.nix`, though a few differ, e.g. `nvim/neovim.nix` for Neovim.
-
-## Highlights
-
-- **Scripts shared by both WMs** — `terminal`, `launch-menu`, `screenshot`, and `leave` are called by name from both Hyprland and Niri keybindings. The window-manager-specific ones stay separate: `hypr-addws` and `hypr-scratchterm` are Hyprland only, `niri-workspace` is Niri only
-- **Taskwarrior notifications** — `tw-notify` / `tw-notify-daily` run on systemd timers and notify due tasks
-- **Home-managed IME** — hazkey is provisioned via the `nix-hazkey` flake input and wired into fcitx5
-- **Per-WM Waybar** — separate services (`waybar-hyprland.service`, `waybar-niri.service`) so the bar can restart without touching the other WM
+`home.nix` is the root module; each app lives in `<app>/<app>.nix` (a few differ, e.g. `nvim/neovim.nix`). `scripts.nix` installs `scripts/` to `~/bin`, and `services/services.nix` declares systemd user units via `systemd.user.*`.
 
 ## Keybindings
 
-`Mod` is the Super key. Bindings below are representative; both WMs share the same scripts, but some details differ — see `hypr/hyprland.lua` and `niri/config.kdl` for the full lists.
+`Mod` is the Super key. Representative bindings only — see `hypr/hyprland.lua` and `niri/config.kdl` for the full lists.
 
 | Keybind | Action |
 | --- | --- |
@@ -70,16 +51,14 @@ home/
 
 ## Included apps
 
-A selection of what is configured or installed:
+Configured or installed (see `home.nix` for the full list):
 
 - **Editors** — Neovim, Helix
 - **Terminals** — alacritty, foot, kitty, ghostty, rio, wezterm
-- **Shell & tools** — fish, starship, atuin, zoxide, zellij, yazi, gitui, lazygit, direnv, eza, bat, broot
+- **Shell and tools** — fish, starship, atuin, zoxide, zellij, yazi, gitui, lazygit, direnv, eza, bat, broot
 - **UI** — waybar (custom build from flake input), quickshell, swaync, fuzzel, tofi, swappy
-- **Media** — mpv
-- **Development** — Rust toolchain (rustup, mold), Node.js/pnpm, LSPs (ruff, pyright, lua-language-server, bash-language-server, typescript-language-server), hyperfine
-- **AI** — ollama (Vulkan), opencode
-- **Other** — taskwarrior (with notification timers), capacities, QMK tooling
+- **Media and development** — mpv; Rust toolchain (rustup, mold), Node.js/pnpm, LSPs, hyperfine
+- **Other** — ollama (Vulkan), opencode, taskwarrior (with notification timers), capacities, QMK tooling
 
 ## License
 

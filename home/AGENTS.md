@@ -15,5 +15,4 @@ Nix home-manager tree for user `miyaco`, part of the NixOS flake in the reposito
 
 ## Conventions
 
-- Commit `area` names the area you changed: an app directory under `home/`, or a feature such as `scx`. Real examples: `[git] drop .jj from gitignore`, `[scx] add lavd`
 - Shell scripts: clean shellharden warnings before committing; `is-4k` (in `~/bin`) reports whether the focused monitor is DP-1 for monitor-specific behavior

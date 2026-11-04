@@ -29,7 +29,7 @@ NixOS + home-manager flake for the single host `nixos-desktop` (x86_64-linux). N
 
 ## Commits
 
-- `[area] lowercase imperative` in English, e.g. `[scx] add lavd` or `[system] move private values to local file`. Newer commits use this consistently; older ones have no prefix. `area` names the area of the system (a feature such as `kernel`, `scx`, `network`, or an app directory under `home/`)
+- `[area] lowercase imperative` in English, e.g. `[scx] add lavd` or `[system] move private values to local file`. `area` names the area of the system (a feature such as `kernel`, `scx`, `network`, an app directory under `home/`, or a real example like `[git] drop .jj from gitignore`)
 - Ask before committing
 - Global preferences (language, commit approval, dependency updates, secrets) live in `home/agents/AGENTS.md`, deployed to `~/.agents/AGENTS.md`, `~/.claude/CLAUDE.md`, and `~/.codex/AGENTS.md`, and wired into opencode via `programs.opencode.context` — do not duplicate them here
 

@@ -8,12 +8,10 @@ NixOS configuration for a single desktop machine (`nixos-desktop`), with the use
 
 - **Wayland compositors** — [Hyprland](https://hyprland.org/) and [Niri](https://github.com/niri-wm/niri), both launched through [uwsm](https://github.com/Vladimir-csp/uwsm), sharing the same scripts and per-WM systemd user units (Waybar, idle daemons)
 - **Japanese input** — fcitx5 with [hazkey](https://github.com/aster-void/nix-hazkey), a neural kana-kanji conversion IME, plus meltype
-- **CPU scheduling** — [scx](https://github.com/sched-ext/scx) via scx-loader, ananicy-cpp for nice levels, and ZRAM swap
-- **Snapshots and backups** — snapper takes hourly snapshots of `/`, `/home`, and two Arch subvolumes; btrbk streams daily backups of them to a remote host over SSH
-- **Virtual terminals** — kmscon on the physical consoles
-- **Audio** — PipeWire with ALSA, JACK, and PulseAudio compatibility, and realtime priorities for the `audio` group
-- **Gaming** — Steam and Proton-GE via Flatpak, 32-bit graphics support, gamescope, MangoHud, lsfg-vk, and CoreCtrl with AMD overdrive enabled
-- **Fonts** — Lilex, IBM Plex Sans JP, Noto CJK, and Nerd Font symbols
+- **Performance and snapshots** — [scx](https://github.com/sched-ext/scx) via scx-loader, ZRAM swap, and snapper hourly snapshots with btrbk daily backups to a remote host
+- **Gaming and audio** — Steam and Proton-GE via Flatpak with gamescope, MangoHud, lsfg-vk, CoreCtrl with AMD overdrive; PipeWire with ALSA, JACK, and PulseAudio compatibility
+
+See [home/README.md](home/README.md) for the user environment (window manager keybindings, scripts, services).
 
 ## Layout
 
@@ -37,27 +35,12 @@ NixOS configuration for a single desktop machine (`nixos-desktop`), with the use
 ```sh
 git clone https://github.com/miyakogi/nixos-config.git
 cd nixos-config
-```
-
-Then apply from the repository root:
-
-```sh
 just build    # build the system without activating it
 just switch   # build and activate
 just update   # bump the flake inputs; only do this deliberately
 ```
 
-`just build` and `just switch` wrap:
-
-```sh
-sudo nixos-rebuild <build|switch> --impure --flake .#nixos-desktop
-```
-
-## Home-manager
-
-The user environment is the `home-manager.users.miyaco` module of `nixos-desktop`, so it is applied by the same `nixos-rebuild` command. This flake exposes no `homeConfigurations`, which means `home-manager switch` is not used here.
-
-The modules live under `home/`: `home.nix` is the root module and most apps have their own `<app>/<app>.nix` (a few differ, e.g. `nvim/neovim.nix`). See [home/README.md](home/README.md) for the details (window manager keybindings, scripts, services).
+`just build` and `just switch` wrap `sudo nixos-rebuild <build|switch> --impure --flake .#nixos-desktop`. The user environment is the `home-manager.users.miyaco` module of `nixos-desktop`, so it is applied by the same command; this flake exposes no `homeConfigurations`.
 
 ## License
 
