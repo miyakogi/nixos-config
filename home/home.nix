@@ -153,6 +153,7 @@ in
       vscode-css-languageserver
 
       # ── AI / Inference ──────────────────────────────────
+      deepseek-harness
       ollama-vulkan
 
       # ── Graphics / GPU ──────────────────────────────────

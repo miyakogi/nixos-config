@@ -58,7 +58,7 @@ Configured or installed (see `home.nix` for the full list):
 - **Shell and tools** — fish, starship, atuin, zoxide, zellij, yazi, gitui, lazygit, direnv, eza, bat, broot
 - **UI** — waybar (custom build from flake input), quickshell, swaync, fuzzel, tofi, swappy
 - **Media and development** — mpv; Rust toolchain (rustup, mold), Node.js/pnpm, LSPs, hyperfine
-- **Other** — ollama (Vulkan), opencode, taskwarrior (with notification timers), capacities, QMK tooling
+- **Other** — deepseek-harness, ollama (Vulkan), opencode, taskwarrior (with notification timers), capacities, QMK tooling
 
 ## License
 
