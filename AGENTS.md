@@ -30,7 +30,7 @@ NixOS + home-manager flake for the single host `nixos-desktop` (x86_64-linux). N
 
 - `[area] lowercase imperative` in English, e.g. `[scx] add lavd` or `[system] move private values to local file`. `area` names the area of the system (a feature such as `kernel`, `scx`, `network`, an app directory under `home/`, or a real example like `[git] drop .jj from gitignore`)
 - Ask before committing
-- Global preferences (language, commit approval, dependency updates, secrets) live in `home/agents/AGENTS.md`, deployed to `~/.agents/AGENTS.md`, `~/.claude/CLAUDE.md`, and `~/.codex/AGENTS.md`, and wired into opencode via `programs.opencode.context` — do not duplicate them here
+- Global preferences (language, commit approval, dependency updates, secrets) live in `home/agents/AGENTS.md`, deployed to `~/.agents/AGENTS.md`, `~/.claude/CLAUDE.md`, and `~/.codex/AGENTS.md`; opencode and pi get them via `programs.opencode.context` and `programs.pi-coding-agent.context`, and dsh reads `~/.agents/AGENTS.md` natively — do not duplicate them here
 
 ## Secrets
 
