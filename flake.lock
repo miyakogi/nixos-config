@@ -79,16 +79,16 @@
     "meltype-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1793716280,
-        "narHash": "sha256-yQY8q/mcqVyBnAcTuA4/hZq+wQ5ikbRn1uuSwAru4tg=",
+        "lastModified": 1794015737,
+        "narHash": "sha256-imkKTzoiFMAVRktqsZ/2JyKn2FwAKUbO0Nf/dgpxIhU=",
         "owner": "yksr-melt",
         "repo": "Meltype",
-        "rev": "4582116e55a71a679386932a123b0749d7babf58",
+        "rev": "cef9365c1e6775ef152b7920e0a0943eb8b994d7",
         "type": "github"
       },
       "original": {
         "owner": "yksr-melt",
-        "ref": "v1.4.1-pre.4",
+        "ref": "v1.4.1-pre.6",
         "repo": "Meltype",
         "type": "github"
       }
