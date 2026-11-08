@@ -16,7 +16,7 @@
     nix-meltype = {
       url = "github:aster-void/nix-meltype";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.meltype-src.url = "github:yksr-melt/Meltype/v1.4.1-pre.6";
+      inputs.meltype-src.url = "github:yksr-melt/Meltype/v1.5.0";
     };
     helix = {
       url = "github:helix-editor/helix";
