@@ -212,7 +212,11 @@ in
     config = {
       font-name = "Lilex";
       font-size = 21;
-      hwaccel = true;
+      # Keep the software renderer (drm2d + bbulk): the GL text renderer
+      # (drm3d + gltex) intermittently fails to upload glyphs at boot
+      # ("text_gltex: cannot load glyph data into OpenGL texture (1282:
+      # <INVALID_OPERATION>)"), leaving a black screen with only the cursor.
+      hwaccel = false;
       libseat = false;
       term = "kmscon";
     };
