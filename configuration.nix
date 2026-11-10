@@ -536,7 +536,6 @@ in
   };
 
   # NFS Client
-  services.rpcbind.enable = true;
   systemd.mounts = [{
     type = "nfs";
     mountConfig = {
