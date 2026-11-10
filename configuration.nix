@@ -528,6 +528,9 @@ in
       ExecStartPre = "${pkgs.bash}/bin/bash -c 'until ${pkgs.iproute2}/bin/ip addr show tailscale0 | ${pkgs.gnugrep}/bin/grep -q \"100.\"; do sleep 1; done'";
       ExecStart = "${pkgs.docker}/bin/docker run --rm -p ${local.tailscaleIp}:50021:50021 voicevox/voicevox_engine:cpu-latest";
       KillSignal = "SIGINT";
+      TimeoutStartSec = 30;
+      Restart = "on-failure";
+      RestartSec = 5;
     };
   };
 
