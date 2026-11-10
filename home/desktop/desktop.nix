@@ -25,11 +25,15 @@
       icon = "org.chromium.Chromium";
       exec = "flatpak run --branch=stable --arch=x86_64 --command=/app/bin/chromium --file-forwarding org.chromium.Chromium --ozone-platform=wayland --enable-features=VaapiVideoDecoder,VaapiIgnoreDriverChecks,UseOzonePlatform,Vulkan --disable-backgrounding-occluded-windows --disable-renderer-backgrounding --disable-background-timer-throttling --disable-features=CalculateNativeWinOcclusion,IntensiveWakeUpThrottling @@u %U @@";
     };
-    "capacities" = {
+    "io.capacities.app" = {
       name = "Capacities";
       type = "Application";
       icon = "capacities";
-      exec = "capacities --no-sandbox --force-device-scale-factor=1.5 --ozone-platform=wayland";
+      comment = "Capacities";
+      categories = [ "Education" ];
+      mimeType = [ "x-scheme-handler/capacities" ];
+      exec = "capacities --disable-dev-shm-usage --force-device-scale-factor=1.5 --ozone-platform=wayland %U";
+      settings.StartupWMClass = "io.capacities.app";
     };
     "ai.opencode.desktop" = {
       name = "OpenCode (Desktop)";

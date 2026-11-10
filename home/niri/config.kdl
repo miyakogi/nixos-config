@@ -81,7 +81,7 @@ spawn-at-startup "xwayland-satellite"
 spawn-sh-at-startup "app2unit -s b -t service -- hyprpaper -c ~/.config/niri/hyprpaper.conf"
 
 // Capacities (memo)
-spawn-sh-at-startup "app2unit -s b -t service -- capacities --no-sandbox --force-device-scale-factor=1.5 --ozone-platform=wayland"
+spawn-sh-at-startup "app2unit -s b -t service -- capacities --force-device-scale-factor=1.5 --ozone-platform=wayland"
 
 // OpenCode Desktop (AI)
 spawn-sh-at-startup "app2unit -s b -t service -- opencode-desktop --force-device-scale-factor=1.75 --ozone-platform=wayland --disable-smooth-scrolling"
