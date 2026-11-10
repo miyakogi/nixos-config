@@ -9,7 +9,7 @@ export MANPAGER="nvim +Man! -u $HOME/.config/nvim/manrc"
 export LESS="-iFRSM"
 export SYSTEMD_LESS="-iFRSM"
 
-set -gx XDG_DATA_DIRS ~/.local/state/nix/profiles/home-manager/home-path/share ~/.local/share /usr/local/share /usr/share $XDG_DATA_DIRS
+set -gx XDG_DATA_DIRS ~/.local/share /usr/local/share /usr/share $XDG_DATA_DIRS
 
 # Zoxide option
 set -x _ZO_FZF_OPTS "--bind=ctrl-z:ignore --exit-0 --height=40% --info=inline --no-sort --reverse --select-1 --exact"
