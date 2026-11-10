@@ -353,20 +353,19 @@ in
     fontconfig = {
       defaultFonts = {
         serif = [
-          "Symbols Nerd Font"
-          "Lilex"
           "Noto Serif CJK JP"
+          "Symbols Nerd Font"
           "Noto Emoji"
         ];
         sansSerif = [
-          "Symbols Nerd Font"
           "Lilex"
+          "Symbols Nerd Font"
           "IBM Plex Sans JP"
           "Noto Emoji"
         ];
         monospace = [
-          "Symbols Nerd Font"
           "Lilex"
+          "Symbols Nerd Font"
           "IBM Plex Sans JP"
           "Noto Emoji"
         ];
