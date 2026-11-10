@@ -7,6 +7,23 @@ let
   inherit (pkgs.stdenv.hostPlatform) system;
 in
 {
+  # Started at boot via users.users.miyaco.linger. PATH is explicit because
+  # user units only inherit systemd's minimal PATH, and sessions started from
+  # the Web UI need the user profile tools (git, gh, rg, just, ...).
+  systemd.user.services.dsh-web = {
+    Unit.Description = "DeepSeek Harness Web UI";
+    Service = {
+      Type = "simple";
+      ExecStart = "${pkgs.deepseek-harness}/bin/dsh web --no-open";
+      Environment = [
+        "PATH=%h/bin:%h/.local/bin:%h/.cargo/bin:%h/.npm-global/bin:/run/wrappers/bin:%h/.nix-profile/bin:/etc/profiles/per-user/%u/bin:/run/current-system/sw/bin"
+      ];
+      Restart = "on-failure";
+      RestartSec = 3;
+    };
+    Install.WantedBy = [ "default.target" ];
+  };
+
   systemd.user.services.taskwarrior-notify = {
     Unit.Description = "Taskwarrior Due Task Notifier";
     Service = {

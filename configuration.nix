@@ -401,6 +401,8 @@ in
   # User account
   users.users.miyaco = {
     isNormalUser = true;
+    # Keep the user manager running at boot so dsh-web starts before login.
+    linger = true;
     shell = pkgs.fish;
     extraGroups = [
       "wheel"
