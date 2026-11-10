@@ -565,11 +565,7 @@ in
 
   # Session
   services.dbus.enable = true;
-  xdg.portal = {
-    enable = true;
-    wlr.enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-  };
+  xdg.portal.enable = true;
 
   # systemd.globalEnvironment sets TZDIR to the tzdata store path, which the
   # uwsm session unit passes on to every GUI app. Flatpak resolves the sandbox
