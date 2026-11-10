@@ -66,7 +66,16 @@ in
       xdg-desktop-portal-gnome # for niri dark theme, see: https://github.com/niri-wm/niri/issues/2878#issuecomment-3573812112
     ];
     config.niri = {
+      # Match niri's shipped niri-portals.conf; defining config.niri here
+      # overrides that file, so every key it sets must be repeated.
+      default = [
+        "gnome"
+        "gtk"
+      ];
+      "org.freedesktop.impl.portal.Access" = [ "gtk" ];
       "org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
+      "org.freedesktop.impl.portal.Notification" = [ "gtk" ];
+      "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
     };
   };
 
