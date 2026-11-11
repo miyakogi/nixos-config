@@ -4,9 +4,10 @@ NixOS + home-manager flake for the single host `nixos-desktop` (x86_64-linux). N
 
 ## Apply and verify
 
-- `just build` — build the system without activating it
-- `just switch` — build and activate
-- Both expand to `sudo nixos-rebuild <build|switch> --impure --flake .#nixos-desktop`. `--impure` is required: `configuration.nix` imports `~/.config/nixos-local/local.nix` by absolute path and `throw`s when the file is missing
+- `just build` — build the system without activating it → `nixos-rebuild build --impure --flake .#nixos-desktop`
+- `just switch` — build and activate → `sudo nixos-rebuild switch --impure --flake .#nixos-desktop`
+- Only `switch` needs root; `build` and `nix flake update` run unprivileged so that what they write (`result`, `flake.lock`) stays owned by `miyaco`
+- `--impure` is required: `configuration.nix` imports `~/.config/nixos-local/local.nix` by absolute path and `throw`s when the file is missing
 - Never run `just update` / `nix flake update` unless explicitly asked
 
 ## Layout
