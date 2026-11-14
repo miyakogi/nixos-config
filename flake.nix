@@ -19,7 +19,7 @@
     nix-meltype = {
       url = "github:aster-void/nix-meltype";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.meltype-src.url = "github:yksr-melt/Meltype/v1.5.0";
+      inputs.meltype-src.url = "github:yksr-melt/Meltype/v1.6.0";
     };
     helix = {
       url = "github:helix-editor/helix";
@@ -47,7 +47,21 @@
         patches = [ ./home/patches/nix-meltype-session-vars.patch ];
       };
       meltypeModule = import "${meltypeSrc}/modules/home-manager.nix" (
-        meltypePkgs: meltypePkgs.extend inputs.nix-meltype.overlays.default
+        meltypePkgs:
+        (meltypePkgs.extend inputs.nix-meltype.overlays.default).extend (
+          _final: prev: {
+            fcitx5-meltype = prev.fcitx5-meltype.overrideAttrs (old: {
+              # The addon shows the mode indicator on a 30 ms timer; the test checks 100 ms after
+              # focus-in. In the Nix build both timers can become due in the same event-loop wake and
+              # the test's timer runs first, so auxUp is still empty. The indicator stays 1200 ms;
+              # wait 500 ms instead.
+              postPatch = (old.postPatch or "") + ''
+                substituteInPlace test/testmeltype.cpp \
+                  --replace-fail "now(CLOCK_MONOTONIC) + 100000" "now(CLOCK_MONOTONIC) + 500000"
+              '';
+            });
+          }
+        )
       );
     in
     {
