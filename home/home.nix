@@ -184,6 +184,7 @@ in
       mpc
       ncmpc
       playerctl
+      pulseaudio  # for `pactl` command
       pulsemixer
       spotify-player
 
