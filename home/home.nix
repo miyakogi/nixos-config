@@ -21,6 +21,7 @@ in
   home.sessionVariables = {
     DRI_PRIME = "1";
     NPM_CONFIG_PREFIX = "$HOME/.npm-global"; # global npm install
+    LV2_PATH = "${pkgs.guitarix}/lib/lv2";
   };
 
   # Input Methods
@@ -187,6 +188,12 @@ in
       pulseaudio  # for `pactl` command
       pulsemixer
       spotify-player
+
+      # ── DAW / Guitar ────────────────────────────────────
+      ardour
+      guitarix
+      pipewire.jack
+      qpwgraph
 
       # ── Video ───────────────────────────────────────────
       ffmpeg
