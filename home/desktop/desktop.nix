@@ -48,6 +48,25 @@
       icon = "org.gnome.gitlab.dqpb.GMetronome";
       exec = "flatpak run --branch=stable --arch=x86_64 --command=gmetronome --env=GDK_SCALE=2 --env=GDK_DPI_SCALE=2.0 org.gnome.gitlab.dqpb.GMetronome";
     };
+    # Ardour's JACK backend links libjack.so.0 from JACK2 and expects a real
+    # jackd; pw-jack puts PipeWire's libjack ahead of it in LD_LIBRARY_PATH.
+    "ardour9" = {
+      name = "Ardour";
+      comment = "Ardour Digital Audio Workstation";
+      categories = [
+        "AudioVideo"
+        "Audio"
+        "AudioVideoEditing"
+      ];
+      icon = "ardour9";
+      exec = "pw-jack ardour9";
+      mimeType = [ "application/x-ardour" ];
+      settings = {
+        StartupWMClass = "Ardour";
+        X-NSM-Capable = "true";
+        X-NSM-Exec = "pw-jack ardour9";
+      };
+    };
     "spotify-player" = {
       name = "Spotify Player";
       type = "Application";
