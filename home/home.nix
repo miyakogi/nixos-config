@@ -1,7 +1,6 @@
 { lib, inputs, pkgs, ... }:
 let
   inherit (pkgs.stdenv.hostPlatform) system;
-  master = inputs.nixpkgs-master.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 in
 {
   home.username = "miyaco";
@@ -22,7 +21,7 @@ in
   home.sessionVariables = {
     DRI_PRIME = "1";
     NPM_CONFIG_PREFIX = "$HOME/.npm-global"; # global npm install
-    LV2_PATH = lib.makeSearchPath "lib/lv2" [ pkgs.guitarix master.tone3000 ];
+    LV2_PATH = lib.makeSearchPath "lib/lv2" [ pkgs.guitarix pkgs.tone3000 ];
   };
 
   # Input Methods
@@ -195,6 +194,7 @@ in
       guitarix
       pipewire.jack
       qpwgraph
+      tone3000
 
       # ── Video ───────────────────────────────────────────
       ffmpeg
@@ -234,7 +234,6 @@ in
       # ── Flake Packages ──────────────────────────────────
       # without pkgs prefix: packages from inputs.* go here
       # example: inputs.<name>.packages.${system}.default
-      master.tone3000
     ];
 
   imports = [
