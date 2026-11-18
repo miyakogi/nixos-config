@@ -74,6 +74,10 @@ in
     cache.enable = true;
   };
   environment.extraOutputsToInstall = [ "man" ];
+  # Link home-manager's zsh site-functions into the per-user profile, otherwise
+  # the autoloaded functions from programs.zsh.siteFunctions (edit, hx, gg, ssh)
+  # have no definition file on fpath.
+  environment.pathsToLink = [ "/share/zsh" ];
 
   # Network
   networking.hostName = "nixos-desktop";
