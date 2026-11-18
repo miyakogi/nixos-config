@@ -17,7 +17,7 @@ NixOS + home-manager flake for the single host `nixos-desktop` (x86_64-linux). N
 
 ## System-side gotchas
 
-- `nixos-hardware` modules are imported for the Intel CPU, the AMD and Intel GPUs, and common PC SSDs. `hardware-configuration.nix` is machine-generated — touch it only for disk layout changes
+- `nixos-hardware` modules are imported for the Intel CPU, the AMD and Intel GPUs, and common PC SSDs. `hardware-configuration.nix` is machine-generated — touch it only for disk layout changes; regenerating it with `nixos-generate-config` drops the nixfmt formatting
 - home-manager runs as a NixOS module with `useGlobalPkgs` and `useUserPackages`, so the flake exposes no `homeConfigurations`
 - Unfree packages are allowlisted by name in `configuration.nix` (`nixpkgs.config.allowUnfreePredicate`), not with `allowUnfree = true` — add a name there to install another unfree package. home-manager shares this `pkgs` through `useGlobalPkgs`, so the same list covers `home/`
 - `meltypeSrc` applies `home/patches/nix-meltype-session-vars.patch` to the `nix-meltype` input; keep it when updating that input
@@ -25,7 +25,7 @@ NixOS + home-manager flake for the single host `nixos-desktop` (x86_64-linux). N
 ## Formatting
 
 - `nix fmt <paths>` (flake `formatter` = `nixfmt`); pass explicit paths
-- `configuration.nix` and `hardware-configuration.nix` are not nixfmt-formatted, so `nix fmt` on them rewrites the whole file — do not include that reformat in an unrelated change
+- Every tracked Nix file, including `configuration.nix` and the installer-generated `hardware-configuration.nix`, is nixfmt-formatted; `nix fmt -- --check $(git ls-files '*.nix')` must pass
 
 ## Commits
 

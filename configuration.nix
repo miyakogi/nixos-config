@@ -2,7 +2,13 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running `nixos-help`).
 
-{ inputs, config, lib, pkgs, ... }:
+{
+  inputs,
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   # Values that must not be published live outside this repository.
@@ -20,7 +26,8 @@ let
       '';
 in
 {
-  imports = [ # Include the results of the hardware scan.
+  imports = [
+    # Include the results of the hardware scan.
     ./hardware-configuration.nix
     inputs.nixos-hardware.nixosModules.common-cpu-intel
     inputs.nixos-hardware.nixosModules.common-gpu-amd
@@ -37,10 +44,10 @@ in
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Kernel parameters
-  boot.resumeDevice="/dev/disk/by-uuid/c08a2aab-4b83-4a85-badb-c112d3228822";
+  boot.resumeDevice = "/dev/disk/by-uuid/c08a2aab-4b83-4a85-badb-c112d3228822";
   boot.kernelParams = [
     # "module_blacklist=i915"  # Disable intel iGPU
-    "i915.enable_guc=3"        # Enable GuC/HuC (more performance)
+    "i915.enable_guc=3" # Enable GuC/HuC (more performance)
     "nowatchdog"
     # "intel_pstate=passive"
     "split_lock_detect=off"
@@ -55,7 +62,7 @@ in
     "kernel.sysrq" = 244;
 
     # from cachy-settings
-    "kernel.nmi_watchdog" = 0;  # disable watchdog
+    "kernel.nmi_watchdog" = 0; # disable watchdog
   };
 
   # SystemD
@@ -94,7 +101,7 @@ in
   services.tailscale.openFirewall = true;
   networking.firewall = {
     enable = true;
-    trustedInterfaces = ["tailscale0"];
+    trustedInterfaces = [ "tailscale0" ];
     extraCommands = ''
       iptables -A OUTPUT -d 225.3.19.154 -p udp -j ACCEPT
       iptables -A INPUT -d 225.3.19.154 -p udp -j ACCEPT
@@ -128,7 +135,7 @@ in
       default_mode = "LowLatency";
       scheds = {
         scx_bpfland = {
-          auto_mode = [];
+          auto_mode = [ ];
           gaming_mode = [
             "-m"
             "performance"
@@ -148,7 +155,7 @@ in
           ];
         };
         scx_flash = {
-          auto_mode = [];
+          auto_mode = [ ];
           gaming_mode = [
             "-m"
             "all"
@@ -163,7 +170,7 @@ in
           ];
         };
         scx_cosmos = {
-          auto_mode = [];
+          auto_mode = [ ];
           gaming_mode = [
             "-m"
             "all"
@@ -180,7 +187,7 @@ in
           ];
         };
         scx_lavd = {
-          auto_mode = [];
+          auto_mode = [ ];
           gaming_mode = [
             "--performance"
           ];
@@ -347,7 +354,7 @@ in
       noto-fonts-cjk-sans
       noto-fonts-monochrome-emoji
       nerd-fonts.symbols-only
-      ibm-plex  # steam uses ttf font
+      ibm-plex # steam uses ttf font
     ];
     fontDir.enable = true;
     fontconfig = {
@@ -387,7 +394,7 @@ in
             </edit>
           </match>
         </fontconfig>
-     '';
+      '';
     };
   };
 
@@ -414,45 +421,73 @@ in
 
   # Use privileges
   security.pam.loginLimits = [
-    { domain = "@audio"; item = "memlock"; type = "-"; value = "unlimited"; }
-    { domain = "@audio"; item = "nice"; type = "-"; value = "-19"; }
-    { domain = "@audio"; item = "rtprio"; type = "-"; value = "99"; }
-    { domain = "@audio"; item = "nofile"; type = "soft"; value = "99999"; }
-    { domain = "@audio"; item = "nofile"; type = "hard"; value = "99999"; }
+    {
+      domain = "@audio";
+      item = "memlock";
+      type = "-";
+      value = "unlimited";
+    }
+    {
+      domain = "@audio";
+      item = "nice";
+      type = "-";
+      value = "-19";
+    }
+    {
+      domain = "@audio";
+      item = "rtprio";
+      type = "-";
+      value = "99";
+    }
+    {
+      domain = "@audio";
+      item = "nofile";
+      type = "soft";
+      value = "99999";
+    }
+    {
+      domain = "@audio";
+      item = "nofile";
+      type = "hard";
+      value = "99999";
+    }
   ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    python3
-    fish
-    git
-    wget
-    psmisc  # killall, pstree, etc...
-    mesa
-    libinput
-    lm_sensors
-    smartmontools
-    dbus
-    gcc
-    clang
-    gnumake
-    pkg-config
-    rustc
-    cargo
-    mold
-    sccache
-    nfs-utils  # for NFS
-    openssl
-    libsecret
-    libiconv
-    man
-    systemd.man
-    man-pages
-    man-pages-posix
-  ] ++ [
-    config.systemd.package.man
-  ];
+  environment.systemPackages =
+    with pkgs;
+    [
+      python3
+      fish
+      git
+      wget
+      psmisc # killall, pstree, etc...
+      mesa
+      libinput
+      lm_sensors
+      smartmontools
+      dbus
+      gcc
+      clang
+      gnumake
+      pkg-config
+      rustc
+      cargo
+      mold
+      sccache
+      nfs-utils # for NFS
+      openssl
+      libsecret
+      libiconv
+      man
+      systemd.man
+      man-pages
+      man-pages-posix
+    ]
+    ++ [
+      config.systemd.package.man
+    ];
 
   environment.variables = {
     PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig:${pkgs.dbus.dev}/lib/pkgconfig";
@@ -477,7 +512,7 @@ in
   # Enable commands and flakes support
   nix = {
     settings = {
-      auto-optimise-store = true;  # Nix store optimization
+      auto-optimise-store = true; # Nix store optimization
       experimental-features = [
         "nix-command"
         "flakes"
@@ -520,9 +555,16 @@ in
   # voicevox service for discord tts bots
   systemd.services.voicevox-engine = {
     description = "VOICEVOX Engine Server";
-    after = [ "docker.service" "tailscaled.service" "network-online.target" ];
+    after = [
+      "docker.service"
+      "tailscaled.service"
+      "network-online.target"
+    ];
     requires = [ "docker.service" ];
-    wants = [ "tailscaled.service" "network-online.target" ];
+    wants = [
+      "tailscaled.service"
+      "network-online.target"
+    ];
     wantedBy = [ "multi-user.target" ];
 
     serviceConfig = {
@@ -537,22 +579,26 @@ in
   };
 
   # NFS Client
-  systemd.mounts = [{
-    type = "nfs";
-    mountConfig = {
-      Options = "noatime,vers=4";
-      TimeoutSec = 20;
-    };
-    what = "${local.backupHost}:/hdd";
-    where = "/media/hdd";
-  }];
-  systemd.automounts = [{
-    wantedBy = [ "multi-user.target" ];
-    automountConfig = {
-      TimeoutIdleSec = "200";
-    };
-    where = "/media/hdd";
-  }];
+  systemd.mounts = [
+    {
+      type = "nfs";
+      mountConfig = {
+        Options = "noatime,vers=4";
+        TimeoutSec = 20;
+      };
+      what = "${local.backupHost}:/hdd";
+      where = "/media/hdd";
+    }
+  ];
+  systemd.automounts = [
+    {
+      wantedBy = [ "multi-user.target" ];
+      automountConfig = {
+        TimeoutIdleSec = "200";
+      };
+      where = "/media/hdd";
+    }
+  ];
 
   # Sound
   # sound.enable = true;
@@ -577,8 +623,8 @@ in
   };
 
   # File Manager Support
-  services.gvfs.enable = true;  # USB auto-mounting
-  services.tumbler.enable = true;  # thumbnail images
+  services.gvfs.enable = true; # USB auto-mounting
+  services.tumbler.enable = true; # thumbnail images
 
   # Programs in system
   programs = {
