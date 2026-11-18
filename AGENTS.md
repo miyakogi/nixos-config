@@ -25,7 +25,7 @@ NixOS + home-manager flake for the single host `nixos-desktop` (x86_64-linux). N
 ## Formatting
 
 - `just fmt` formats every tracked Nix file with nixfmt (the flake `formatter`); pass explicit paths to `nix fmt` to format individual files
-- Every tracked Nix file, including `configuration.nix` and the installer-generated `hardware-configuration.nix`, is nixfmt-formatted; `nix fmt -- --check $(git ls-files '*.nix')` must pass
+- Every tracked Nix file, including `configuration.nix` and the installer-generated `hardware-configuration.nix`, is nixfmt-formatted; `just fmt-check` must pass
 
 ## Commits
 

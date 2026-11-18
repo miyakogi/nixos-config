@@ -12,5 +12,9 @@ switch:
 fmt:
 	nix fmt $(git ls-files '*.nix')
 
+# Check that every tracked Nix file is formatted
+fmt-check:
+	nix fmt -- --check $(git ls-files '*.nix')
+
 update:
 	nix flake update
