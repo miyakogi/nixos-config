@@ -1,4 +1,9 @@
-{ lib, inputs, pkgs, ... }:
+{
+  lib,
+  inputs,
+  pkgs,
+  ...
+}:
 let
   inherit (pkgs.stdenv.hostPlatform) system;
 in
@@ -21,7 +26,10 @@ in
   home.sessionVariables = {
     DRI_PRIME = "1";
     NPM_CONFIG_PREFIX = "$HOME/.npm-global"; # global npm install
-    LV2_PATH = lib.makeSearchPath "lib/lv2" [ pkgs.guitarix pkgs.tone3000 ];
+    LV2_PATH = lib.makeSearchPath "lib/lv2" [
+      pkgs.guitarix
+      pkgs.tone3000
+    ];
   };
 
   # Input Methods
@@ -185,7 +193,7 @@ in
       mpc
       ncmpc
       playerctl
-      pulseaudio  # for `pactl` command
+      pulseaudio # for `pactl` command
       pulsemixer
       spotify-player
 
