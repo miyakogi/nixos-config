@@ -31,6 +31,12 @@
       url = "github:miyakogi/Anime4K-mpv-glsl";
       flake = false;
     };
+    # niri source carrying the force-render window rule from
+    # https://github.com/niri-wm/niri/pull/4392 (draft PR).
+    niri-src = {
+      url = "github:MithicSpirit/niri/force-render-v2";
+      flake = false;
+    };
   };
 
   outputs =

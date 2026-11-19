@@ -93,6 +93,23 @@
         "type": "github"
       }
     },
+    "niri-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1790130336,
+        "narHash": "sha256-K8rKFl1DsR+PSfLuHilQWtb95NaD1jsDy5fbeVOtukc=",
+        "owner": "MithicSpirit",
+        "repo": "niri",
+        "rev": "bf3d24c9302ba09ac01f0175a403a301bf00f17b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "MithicSpirit",
+        "ref": "force-render-v2",
+        "repo": "niri",
+        "type": "github"
+      }
+    },
     "nix-flatpak": {
       "locked": {
         "lastModified": 1791644268,
@@ -223,6 +240,7 @@
       "inputs": {
         "helix": "helix",
         "home-manager": "home-manager",
+        "niri-src": "niri-src",
         "nix-flatpak": "nix-flatpak",
         "nix-hazkey": "nix-hazkey",
         "nix-meltype": "nix-meltype",

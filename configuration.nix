@@ -530,6 +530,22 @@ in
     };
   };
 
+  # Build niri from the force-render PR branch instead of the nixpkgs release.
+  # Updating the branch changes the vendor hash: take the `got:` value from the
+  # hash mismatch error and paste it here.
+  nixpkgs.overlays = [
+    (final: prev: {
+      niri = prev.niri.overrideAttrs (old: {
+        src = inputs.niri-src;
+        cargoDeps = prev.rustPlatform.fetchCargoVendor {
+          inherit (old) pname;
+          src = inputs.niri-src;
+          hash = "sha256-vtTh+TG6TdX46QydGKaeo50u2qdQf3UkQ50EML+5H9c=";
+        };
+      });
+    })
+  ];
+
   # Allow unfree software only for these packages, identified by name.
   nixpkgs.config.allowUnfreePredicate =
     p:
