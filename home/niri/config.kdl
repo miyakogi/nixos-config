@@ -359,6 +359,7 @@ window-rule {
     match app-id="^Chromium-browser$"
     match app-id="^org.chromium.Chromium$"
     default-column-width { proportion 0.3333; }
+    force-render 30
 }
 
 window-rule {
