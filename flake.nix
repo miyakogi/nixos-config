@@ -19,7 +19,7 @@
     nix-meltype = {
       url = "github:aster-void/nix-meltype";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.meltype-src.url = "github:yksr-melt/Meltype/v1.6.0";
+      inputs.meltype-src.url = "github:yksr-melt/Meltype/v1.7.0-rc.1";
     };
     helix = {
       url = "github:helix-editor/helix";
@@ -50,25 +50,22 @@
       meltypeSrc = pkgs.applyPatches {
         name = "nix-meltype-patcked";
         src = inputs.nix-meltype.outPath;
-        patches = [ ./home/patches/nix-meltype-session-vars.patch ];
+        patches = [
+          ./home/patches/nix-meltype-session-vars.patch
+          # Meltype 1.7.0 moved the NativeAOT project from src/Meltype.Mac.Native to
+          # src/Meltype.Core.CApi; nix-meltype still points at the old path.
+          ./home/patches/nix-meltype-native-project-path.patch
+        ];
       };
-      meltypeModule = import "${meltypeSrc}/modules/home-manager.nix" (
-        meltypePkgs:
-        (meltypePkgs.extend inputs.nix-meltype.overlays.default).extend (
-          _final: prev: {
-            fcitx5-meltype = prev.fcitx5-meltype.overrideAttrs (old: {
-              # The addon shows the mode indicator on a 30 ms timer; the test checks 100 ms after
-              # focus-in. In the Nix build both timers can become due in the same event-loop wake and
-              # the test's timer runs first, so auxUp is still empty. The indicator stays 1200 ms;
-              # wait 500 ms instead.
-              postPatch = (old.postPatch or "") + ''
-                substituteInPlace test/testmeltype.cpp \
-                  --replace-fail "now(CLOCK_MONOTONIC) + 100000" "now(CLOCK_MONOTONIC) + 500000"
-              '';
-            });
-          }
-        )
-      );
+      # Import the patched flake so that the module and the packages it installs
+      # (meltype, fcitx5-meltype) all come from the patched tree. The outputs
+      # function does not use `self`, so an empty set is enough.
+      meltypeOutputs = (import "${meltypeSrc}/flake.nix").outputs {
+        self = { };
+        nixpkgs = inputs.nixpkgs;
+        meltype-src = inputs.nix-meltype.inputs.meltype-src;
+      };
+      meltypeModule = meltypeOutputs.homeModules.default;
     in
     {
       formatter.x86_64-linux = pkgs.nixfmt;

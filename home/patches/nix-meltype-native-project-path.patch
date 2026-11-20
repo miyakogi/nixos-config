@@ -1,0 +1,20 @@
+--- a/packages/meltype/default.nix
++++ b/packages/meltype/default.nix
+@@ -27,7 +27,7 @@
+   pname = "meltype";
+   inherit src version;
+ 
+-  projectFile = "src/Meltype.Mac.Native/Meltype.Mac.Native.csproj";
++  projectFile = "src/Meltype.Core.CApi/Meltype.Core.CApi.csproj";
+   dotnet-sdk = dotnetCorePackages.sdk_10_0;
+   selfContainedBuild = true;
+   # restore にも同じ引数を渡す (PublishAot=true で ILCompiler のパッケージが要ると判定される)
+@@ -44,7 +44,7 @@
+   # フラグはシェル変数 $dotnetFlags から取らない (__structuredAttrs の有無で文字列か配列かが変わる)
+   buildPhase = ''
+     runHook preBuild
+-    dotnet publish src/Meltype.Mac.Native/Meltype.Mac.Native.csproj -c Release -r ${dotnetCorePackages.systemToDotnetRid stdenv.hostPlatform.system} --no-restore ${lib.escapeShellArgs dotnetFlags} -o publish
++    dotnet publish src/Meltype.Core.CApi/Meltype.Core.CApi.csproj -c Release -r ${dotnetCorePackages.systemToDotnetRid stdenv.hostPlatform.system} --no-restore ${lib.escapeShellArgs dotnetFlags} -o publish
+     runHook postBuild
+   '';
+ 
