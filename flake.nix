@@ -16,6 +16,10 @@
       url = "github:aster-void/nix-hazkey";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-mozkey = {
+      url = "path:./flakes/nix-mozkey";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nix-meltype = {
       url = "github:aster-void/nix-meltype";
       inputs.nixpkgs.follows = "nixpkgs";

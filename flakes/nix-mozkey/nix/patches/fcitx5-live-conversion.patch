@@ -1,0 +1,147 @@
+diff --git a/src/unix/fcitx5/mozc_response_parser.cc b/src/unix/fcitx5/mozc_response_parser.cc
+index 189e6c5..970068a 100644
+--- a/src/unix/fcitx5/mozc_response_parser.cc
++++ b/src/unix/fcitx5/mozc_response_parser.cc
+@@ -301,6 +301,15 @@ void MozcResponseParser::ExecuteCallback(const mozc::commands::Output& response,
+     return;
+   }
+ 
++  if (response.callback().has_delay_millisec() &&
++      response.callback().delay_millisec() > 0) {
++    // The server debounces some callbacks (e.g. Mozkey's live conversion) and
++    // expects the client to send the command back after the delay.
++    engine_->mozcState(ic)->ScheduleDelayedCommand(
++        callback_command, response.callback().delay_millisec());
++    return;
++  }
++
+   mozc::commands::SessionCommand session_command;
+   session_command.set_type(callback_command.type());
+ 
+diff --git a/src/unix/fcitx5/mozc_state.cc b/src/unix/fcitx5/mozc_state.cc
+index 198eb34..d75f1da 100644
+--- a/src/unix/fcitx5/mozc_state.cc
++++ b/src/unix/fcitx5/mozc_state.cc
+@@ -30,6 +30,7 @@
+ #include "unix/fcitx5/mozc_state.h"
+ 
+ #include <fcitx-utils/capabilityflags.h>
++#include <fcitx-utils/event.h>
+ #include <fcitx-utils/key.h>
+ #include <fcitx-utils/keysym.h>
+ #include <fcitx-utils/log.h>
+@@ -291,6 +292,7 @@ void MozcState::SelectCandidate(int32_t id) {
+ // This function is called from SCIM framework.
+ void MozcState::Reset() {
+   MOZC_VLOG(1) << "resetim";
++  CancelDelayedCommands();
+   std::string error;
+   mozc::commands::Output raw_response;
+   if (TrySendCommand(mozc::commands::SessionCommand::REVERT, &raw_response,
+@@ -316,6 +318,47 @@ bool MozcState::Paging(bool prev) {
+   return false;
+ }
+ 
++void MozcState::PruneDelayedCommands() {
++  for (auto it = delayed_commands_.begin(); it != delayed_commands_.end();) {
++    // A fired time event disables itself before returning. Drop it outside of
++    // its callback so the event loop never observes a destroyed source.
++    if (!(*it)->isEnabled()) {
++      it = delayed_commands_.erase(it);
++    } else {
++      ++it;
++    }
++  }
++}
++
++void MozcState::CancelDelayedCommands() { delayed_commands_.clear(); }
++
++void MozcState::ScheduleDelayedCommand(
++    const mozc::commands::SessionCommand& command, uint32_t delay_millisec) {
++  if (delay_millisec == 0) {
++    return;
++  }
++
++  PruneDelayedCommands();
++
++  // Copy the whole command. Mozkey attaches a live conversion generation and
++  // key to the callback so that the server can reject stale requests.
++  const uint64_t delay_usec = static_cast<uint64_t>(delay_millisec) * 1000;
++  auto event = engine_->instance()->eventLoop().addTimeEvent(
++      CLOCK_MONOTONIC, now(CLOCK_MONOTONIC) + delay_usec, 0,
++      [this, command](EventSourceTime* source, uint64_t) {
++        source->setEnabled(false);
++        mozc::commands::Output output;
++        if (!SendCommand(command, &output)) {
++          LOG(ERROR) << "Delayed session command failed";
++          return false;
++        }
++        // The response may itself request another delayed command.
++        ParseResponse(output);
++        return false;
++      });
++  delayed_commands_.push_back(std::move(event));
++}
++
+ // This function is called when the ic gets focus.
+ void MozcState::FocusIn() {
+   MOZC_VLOG(1) << "MozcState::FocusIn()";
+@@ -327,6 +370,7 @@ void MozcState::FocusIn() {
+ // This function is called when the ic loses focus.
+ void MozcState::FocusOut(const InputContextEvent& event) {
+   MOZC_VLOG(1) << "MozcState::FocusOut()";
++  CancelDelayedCommands();
+   std::string error;
+   mozc::commands::Output raw_response;
+ 
+diff --git a/src/unix/fcitx5/mozc_state.h b/src/unix/fcitx5/mozc_state.h
+index cb112de..e21f539 100644
+--- a/src/unix/fcitx5/mozc_state.h
++++ b/src/unix/fcitx5/mozc_state.h
+@@ -30,6 +30,7 @@
+ #ifndef MOZC_UNIX_FCITX_FCITX_MOZC_H_
+ #define MOZC_UNIX_FCITX_FCITX_MOZC_H_
+ 
++#include <fcitx-utils/eventloopinterface.h>
+ #include <fcitx-utils/key.h>
+ #include <fcitx/event.h>
+ #include <fcitx/inputcontextproperty.h>
+@@ -38,6 +39,7 @@
+ #include <cstdint>
+ #include <memory>
+ #include <string>
++#include <vector>
+ 
+ #include "protocol/commands.pb.h"
+ #include "protocol/config.pb.h"
+@@ -68,6 +70,13 @@ class MozcState : public InputContextProperty {
+   void FocusOut(const InputContextEvent& event);
+   bool Paging(bool prev);
+ 
++  // Sends a callback command requested by the server (see
++  // commands::Output::Callback) after |delay_millisec| has elapsed.
++  void ScheduleDelayedCommand(const mozc::commands::SessionCommand& command,
++                              uint32_t delay_millisec);
++  // Drops all pending delayed callback commands.
++  void CancelDelayedCommands();
++
+   // Functions called by the MozcResponseParser class to update UI.
+ 
+   // Displays a 'result' (aka 'commit string') on FCITX UI.
+@@ -141,12 +150,16 @@ class MozcState : public InputContextProperty {
+   void DrawPreeditInfo();
+   void DrawAux();
+ 
++  // Removes delayed command sources that already fired.
++  void PruneDelayedCommands();
++
+   // Open url_ with a default browser.
+   void OpenUrl();
+ 
+   InputContext* ic_;
+   MozcEngine* engine_;
+   mutable std::shared_ptr<MozcClientInterface> client_;
++  std::vector<std::unique_ptr<EventSourceTime>> delayed_commands_;
+ 
+   mozc::commands::CompositionMode composition_mode_ = mozc::commands::HIRAGANA;
+   mozc::config::Config::PreeditMethod preedit_method_ =

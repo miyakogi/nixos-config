@@ -1,0 +1,10 @@
+# Development scratch space (prototype builds, fetched sources, caches)
+/.research/
+/.cache/
+/.home/
+/.home-dict/
+/.bazel-root/
+
+# Nix build results
+/result
+/result-*

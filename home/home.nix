@@ -43,6 +43,9 @@ in
     type = "fcitx5";
     enable = true;
     fcitx5.waylandFrontend = true;
+    # Mozkey ships the `mozc` fcitx5 addon, so fcitx5-mozc cannot be installed
+    # alongside it.
+    fcitx5-mozkey.enable = true;
     fcitx5.addons = with pkgs; [
       inputs.nix-hazkey.packages.${system}.fcitx5-hazkey
       fcitx5-gtk
@@ -248,6 +251,7 @@ in
     # ── Flake Modules ───────────────────────────────────
     inputs.nix-flatpak.homeManagerModules.nix-flatpak
     inputs.nix-hazkey.homeModules.hazkey
+    inputs.nix-mozkey.homeModules.default
 
     # ── System / Base ───────────────────────────────────
     ./services/services.nix
